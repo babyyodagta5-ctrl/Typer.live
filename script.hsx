@@ -1,0 +1,63 @@
+<hsx>
+
+<!-- Reactive Variables -->
+hsx reactive variable currentLessonIndex = 0
+hsx reactive variable userInput = ""
+hsx reactive variable wpm = 0
+hsx reactive variable accuracy = 100
+hsx variable lessons = ["The quick brown fox jumps over the lazy dog.", "Typing is fun when you practice every day.", "HSX allows reactive websites with dynamic components."]
+
+<!-- Components -->
+hsx define component LessonDisplay <div>{{lessons[currentLessonIndex]}}</div>
+
+hsx define component InputBox <input type="text" placeholder="Type here..." oninput="runtime.variables['userInput'].set(this.value)">
+
+hsx define component StatsPanel <div>
+  <p>WPM: {{wpm}}</p>
+  <p>Accuracy: {{accuracy}}%</p>
+  <p>Lesson {{currentLessonIndex + 1}} / {{lessons.length}}</p>
+</div>
+
+hsx define component NextLessonButton <button onclick="
+  const r = runtime;
+  if(r.variables['currentLessonIndex'].get() < r.variables['lessons'].get().length - 1) {
+    r.variables['currentLessonIndex'].set(r.variables['currentLessonIndex'].get() + 1);
+    r.variables['userInput'].set('');
+  }
+">Next Lesson</button>
+
+<!-- Render Components -->
+hsx render component LessonDisplay to #lesson-container
+hsx render component InputBox to #input-container
+hsx render component StatsPanel to #stats-container
+hsx render component NextLessonButton to #next-button
+
+<!-- Async Logic -->
+hsx run async
+  const r = runtime;
+  setInterval(() => {
+    const lessons = r.variables['lessons'].get();
+    const idx = r.variables['currentLessonIndex'].get();
+    const lesson = lessons[idx];
+    const input = r.variables['userInput'].get();
+
+    // Accuracy
+    let correct = 0;
+    for (let i = 0; i < input.length; i++) {
+      if (input[i] === lesson[i]) correct++;
+    }
+    const acc = input.length === 0 ? 100 : Math.round((correct / input.length) * 100);
+    r.variables['accuracy'].set(acc);
+
+    // Fake WPM (just a demo tick)
+    const words = input.split(" ").length;
+    const wpm = Math.min(120, Math.round(words * 12)); // limit max for demo
+    r.variables['wpm'].set(wpm);
+  }, 500);
+</hsx>
+
+<!-- Mount Points -->
+<div id="lesson-container"></div>
+<div id="input-container"></div>
+<div id="stats-container"></div>
+<div id="next-button"></div>

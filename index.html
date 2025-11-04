@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HSX Typing Lessons</title>
+  <style>
+    body { font-family: Arial, sans-serif; background: #f4f4f9; padding: 2rem; }
+    #lesson-container { font-size: 1.2rem; margin-bottom: 1rem; }
+    #input-container input { width: 100%; font-size: 1.1rem; padding: 0.5rem; }
+    #stats-container { margin-top: 1rem; }
+    #next-button { margin-top: 1rem; }
+    .correct { color: green; }
+    .incorrect { color: red; }
+  </style>
+</head>
+<body>
+
+  <h1>HSX Typing Lessons</h1>
+
+  <div id="lesson-container"></div>
+  <div id="input-container"></div>
+  <div id="stats-container"></div>
+  <div id="next-button"></div>
+
+  <!-- HSX Runtime -->
+  <script type="module">
+    import { loadHSX } from './hsx-runtime.js';
+
+    loadHSX('./script.hsx')
+      .then(runtime => console.log('✅ Typing lessons HSX loaded!'))
+      .catch(err => console.error('❌ Failed to load script.hsx:', err));
+  </script>
+
+</body>
+</html>
